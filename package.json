@@ -12,7 +12,7 @@
   "author": "",
   "license": "ISC",
   "description": "",
-  "devDependencies": {
+  "dependencies": {
     "express": "^4.14.0"
   }
 }
