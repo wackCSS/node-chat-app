@@ -17,8 +17,16 @@ io.on('connection', (socket) => {
   socket.on('disconnect', (socket) => {
     console.log('Disconnected from server');
   });  
-});
 
+  socket.on('createMessage', (data) => {
+    console.log('create message', data);
+    io.emit('newMessage', {
+      from: data.from,
+      text: data.text,
+      createdAt: new Date().getTime()
+    }); 
+  });
+});
 
 server.listen(port, () => {
   console.log(`started on port ${port}`);
