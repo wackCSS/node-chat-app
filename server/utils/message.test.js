@@ -21,7 +21,7 @@ describe('generateLocationMessage', () => {
     var from = 'testEmail@test.com';    
     var lat = 10;
     var lng = 20;
-    var url = `https://www.google.com/maps?q=${lat},${lng}`
+    var url = `https://www.google.com/maps?q=${lat},${lng}`;
 
     var message = generateLocationMessage(from, lat, lng);
 
