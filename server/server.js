@@ -22,7 +22,7 @@ io.on('connection', (socket) => {
   socket.on('disconnect', () => {
     console.log('Disconnected from server');
     const user = users.removeUser(socket.id);
-    console.log('user = ', user);
+    //console.log('user = ', user);
     if (user) {
       console.log(user.name);
       io.to(user.room).emit('updateUserList', users.getUserList(user.room));
@@ -31,7 +31,7 @@ io.on('connection', (socket) => {
   });
 
   socket.on('updateUserList', (users) => {
-    console.log('list:', users);
+    //console.log('list:', users);
   });
 
   socket.on('join', (params, callback) => {
@@ -57,17 +57,27 @@ io.on('connection', (socket) => {
     socket.broadcast.to(room).emit('newMessage', generateMessage('Admin', `${name} has joined`));
 
     callback();
-      
   });
 
   socket.on('createMessage', (message, callback) => {
-    console.log('create message', message);
-    io.emit('newMessage', generateMessage(message.from, message.text));
+    const user = users.getUser(socket.id);
+
+    if (user && isRealString(message.text)) {
+      const name = user.name;
+      const room = user.room;
+
+      io.to(room).emit('newMessage', generateMessage(name, message.text));
+    }
     callback();
   });
 
-  socket.on('createLocationMessage', (coords) => {    
-    io.emit('newLocationMessage', generateLocationMessage('Admin', coords.latitude, coords.longitude));    
+  socket.on('createLocationMessage', (coords) => {
+    const user = users.getUser(socket.id);
+    if (user) {
+      const name = user.name;
+      const room = user.room;
+      io.to(room).emit('newLocationMessage', generateLocationMessage(name, coords.latitude, coords.longitude));
+    }
   });
 });
 
